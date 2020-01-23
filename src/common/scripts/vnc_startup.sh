@@ -68,24 +68,22 @@ echo -e "\n------------------ change VNC password  ------------------"
 mkdir -p "$HOME/.vnc"
 PASSWD_PATH="$HOME/.vnc/passwd"
 
-if [[ -f $PASSWD_PATH ]]; then
-    echo -e "\n---------  purging existing VNC password settings  ---------"
-    rm -f $PASSWD_PATH
+if [[ ! -f $PASSWD_PATH ]]; then
+   echo "$VNC_PW" | vncpasswd -f >> $PASSWD_PATH
+   chmod 600 $PASSWD_PATH
 fi
 
-if [[ $VNC_VIEW_ONLY == "true" ]]; then
-    echo "start VNC server in VIEW ONLY mode!"
-    #create random pw to prevent access
-    echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
-fi
-echo "$VNC_PW" | vncpasswd -f >> $PASSWD_PATH
-chmod 600 $PASSWD_PATH
+#if [[ $VNC_VIEW_ONLY == "true" ]]; then
+#    echo "start VNC server in VIEW ONLY mode!"
+#    #create random pw to prevent access
+#    echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
+#fi
 
 
 ## start vncserver and noVNC webclient
 echo -e "\n------------------ start noVNC  ----------------------------"
 if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/launch.sh --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"; fi
-$NO_VNC_HOME/utils/launch.sh --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT &> $STARTUPDIR/no_vnc_startup.log &
+$NO_VNC_HOME/utils/launch.sh --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT --cert $STARTUPDIR/novnc-selfsigned.pem &> $STARTUPDIR/no_vnc_startup.log &
 PID_SUB=$!
 
 echo -e "\n------------------ start VNC server ------------------------"
@@ -98,7 +96,11 @@ echo -e "start vncserver with param: VNC_COL_DEPTH=$VNC_COL_DEPTH, VNC_RESOLUTIO
 if [[ $DEBUG == true ]]; then echo "vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION"; fi
 vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION &> $STARTUPDIR/no_vnc_startup.log
 echo -e "start window manager\n..."
-$HOME/wm_startup.sh &> $STARTUPDIR/wm_startup.log
+if [[ -f $HOME/wm_startup.sh ]]; then
+    $HOME/wm_startup.sh &> $STARTUPDIR/wm_startup.log
+else
+    /headless/wm_startup.sh &> $STARTUPDIR/wm_startup.log
+fi
 
 ## log connect options
 echo -e "\n\n------------------ VNC environment started ------------------"
