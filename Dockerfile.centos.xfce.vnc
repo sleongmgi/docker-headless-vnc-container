@@ -64,6 +64,7 @@ RUN yum -y install numactl-libs.x86_64 \
     libXmu.x86_64 \
     openssh-clients \
     rsync \
+    environment-modules \
     && yum clean all
 
 USER 1000
