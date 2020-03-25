@@ -68,6 +68,15 @@ RUN yum -y install numactl-libs.x86_64 \
     openssh-clients \
     rsync \
     environment-modules \
+    perl-Data-Dumper \
+    xz-libs \
+    xz-compat-libs \
+    gedit \
+    libXpm \
+    libicu \
+    libibverbs \
+    emacs \
+    nano \
     && yum clean all
 
 USER 1000
