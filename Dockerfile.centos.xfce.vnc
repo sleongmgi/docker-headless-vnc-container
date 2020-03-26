@@ -77,7 +77,13 @@ RUN yum -y install numactl-libs.x86_64 \
     libibverbs \
     emacs \
     nano \
-    && yum clean all
+    zsh \
+    git \
+    &&  export ZSH=/usr/share/oh-my-zsh \
+    &&  wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh \
+    && yum clean all \
+    && perl -p -i -e 's|^(# vim.*)|# Source environment-modules\nif [ -f /etc/profile.d/modules.sh ]; then\n . /etc/profile.d/modules.sh\nfi\n$1|' /etc/bashrc \
+    && echo "emulate ksh -c '. /etc/bashrc'" > /etc/zshenv
 
 USER 1000
 
