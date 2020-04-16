@@ -84,6 +84,7 @@ RUN yum -y install numactl-libs.x86_64 \
     && yum clean all \
     && perl -p -i -e 's|^(# vim.*)|# Source environment-modules\nif [ -f /etc/profile.d/modules.sh ]; then\n . /etc/profile.d/modules.sh\nfi\n$1|' /etc/bashrc \
     && echo "emulate ksh -c '. /etc/bashrc'" > /etc/zshenv
+RUN chmod 1777 /run/user
 
 USER 1000
 
