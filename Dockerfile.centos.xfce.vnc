@@ -79,6 +79,7 @@ RUN yum -y install numactl-libs.x86_64 \
     nano \
     zsh \
     git \
+    mesa-libGLU-devel \
     &&  export ZSH=/usr/share/oh-my-zsh \
     &&  wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh \
     && yum clean all \
