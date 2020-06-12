@@ -102,6 +102,7 @@ RUN cd /tmp/ && yum install -y pciutils numactl-libs gtk2 atk cairo gcc-gfortran
     rm -rf *.tgz && \
     yum clean all
 
+COPY ./src/common/xfce/xinitrc /etc/xdg/xfce4/xinitrc
 USER 1000
 
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
