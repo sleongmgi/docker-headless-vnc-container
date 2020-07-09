@@ -108,7 +108,7 @@ if which xfce4-session >/dev/null 2>&1; then
     # start xfce4-session normally
     xfce4-session
   fi
-  kill $(ps auxf | grep null | grep tail | awk '{ print $2 }')
+  kill $(ps auxf | grep -E "infinity|null" | grep -E "tail|sleep" | awk '{ print $2 }')
   exit 0
 fi
 
